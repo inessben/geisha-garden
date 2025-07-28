@@ -1,0 +1,31 @@
+{
+  "name": "geisha-garden",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npm run build:frontend && npm run dev:backend",
+    "dev:watch": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "build:frontend": "cd frontend && npm run build",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "start": "npm run build:frontend && cd backend && npm start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/inessben/geisha-garden.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/inessben/geisha-garden/issues"
+  },
+  "homepage": "https://github.com/inessben/geisha-garden#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
+}

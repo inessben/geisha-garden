@@ -1,0 +1,69 @@
+/* Main App Styles */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Variables CSS personnalisées */
+:root {
+  --primary-color: #ec4899;
+  --secondary-color: #8b5cf6;
+  --accent-color: #f472b6;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --background-light: #fdf2f8;
+  --background-dark: #1f2937;
+}
+
+/* Reset et base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+/* Classes utilitaires personnalisées */
+.geisha-gradient {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+.geisha-shadow {
+  box-shadow: 0 10px 25px rgba(236, 72, 153, 0.15);
+}
+
+.geisha-hover {
+  transition: all 0.3s ease;
+}
+
+.geisha-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(236, 72, 153, 0.2);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+}
