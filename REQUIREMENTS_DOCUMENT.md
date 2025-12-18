@@ -4,7 +4,7 @@
 **Version** : 1.0  
 **Date** : 18 Décembre 2025  
 **Équipe** : 4 développeurs  
-**Statut** : From Scratch → Production
+**Statut** : MVP → Production
 
 ---
 
@@ -27,16 +27,16 @@
 ## 1. PRÉSENTATION DU PROJET
 
 ### 1.1 Description
-**Geisha Garden** est une marketplace d'art digital immersive avec une esthétique cyberpunk/ futuriste. La plateforme permet aux artistes de vendre leurs œuvres numériques et aux collectionneurs de les acheter, avec une intégration crypto/NFT.
+**Geisha Garden** est une marketplace d'art digital immersive avec une esthétique cyberpunk. La plateforme permet aux artistes de vendre leurs œuvres numériques et aux collectionneurs de les acheter, avec une future intégration crypto/NFT.
 
 ### 1.2 Objectifs Fonctionnels
-- Galerie d'œuvres d'art avec navigation immersive
+- Galerie d'œuvres d'art avec navigation 3D immersive
 - Gestion des profils artistes et collectionneurs
 - Système de vente/achat d'œuvres digitales
 - Système de favoris et collections
 - Recherche et filtres avancés
 - Dashboard artiste avec statistiques
-- Intégration wallet crypto
+- Intégration wallet crypto (v2)
 
 ### 1.3 Contraintes Techniques
 - Application scalable pour une base de données conséquente
@@ -107,17 +107,56 @@ geisha-garden/
 │
 ├── backend/                     # Repository Express.js (à créer)
 │   ├── src/
-│   │   ├── config/             # Configuration (DB, auth, etc.)
-│   │   ├── controllers/        # Logique métier
-│   │   ├── middlewares/        # Auth, validation, error handling
-│   │   ├── models/             # Modèles Sequelize/Prisma
-│   │   ├── routes/             # Définition des routes API
-│   │   ├── services/           # Services métier
-│   │   ├── utils/              # Helpers, formatters
+│   │   ├── config/             # Configuration (DB, auth, env)
+│   │   │   ├── database.js     # Connexion PostgreSQL
+│   │   │   ├── redis.js        # Connexion Redis
+│   │   │   └── auth.js         # Config OAuth, JWT
+│   │   │
+│   │   ├── models/             # M - Modèles (Sequelize/Prisma)
+│   │   │   ├── User.js
+│   │   │   ├── Artist.js
+│   │   │   ├── Artwork.js
+│   │   │   ├── Order.js
+│   │   │   └── index.js        # Export tous les modèles
+│   │   │
+│   │   ├── views/              # V - Réponses JSON (templates email)
+│   │   │   └── emails/         # Templates emails (EJS/Handlebars)
+│   │   │
+│   │   ├── controllers/        # C - Contrôleurs (logique métier)
+│   │   │   ├── authController.js
+│   │   │   ├── userController.js
+│   │   │   ├── artistController.js
+│   │   │   ├── artworkController.js
+│   │   │   ├── orderController.js
+│   │   │   └── index.js
+│   │   │
+│   │   ├── routes/             # Définition des routes → controllers
+│   │   │   ├── auth.routes.js
+│   │   │   ├── user.routes.js
+│   │   │   ├── artist.routes.js
+│   │   │   ├── artwork.routes.js
+│   │   │   ├── order.routes.js
+│   │   │   └── index.js        # Router principal
+│   │   │
+│   │   ├── middlewares/        # Middlewares Express
+│   │   │   ├── auth.js         # Vérification JWT
+│   │   │   ├── validate.js     # Validation Joi/Zod
+│   │   │   ├── upload.js       # Multer pour fichiers
+│   │   │   ├── rateLimiter.js  # Rate limiting
+│   │   │   └── errorHandler.js # Gestion erreurs globale
+│   │   │
+│   │   ├── utils/              # Helpers
+│   │   │   ├── jwt.js          # Génération/vérification tokens
+│   │   │   ├── hash.js         # Bcrypt helpers
+│   │   │   ├── email.js        # Envoi emails
+│   │   │   └── storage.js      # Upload S3/MinIO
+│   │   │
 │   │   └── app.js              # Point d'entrée Express
+│   │
 │   ├── tests/
-│   │   ├── unit/
-│   │   └── integration/
+│   │   ├── unit/               # Tests unitaires (controllers)
+│   │   └── integration/        # Tests API (supertest)
+│   │
 │   ├── migrations/             # Migrations BDD
 │   ├── seeders/                # Données de test
 │   ├── Dockerfile
@@ -143,7 +182,109 @@ geisha-garden/
         └── cd.yml              # Déploiement production
 ```
 
-### 2.4 API REST - Conventions
+### 2.4 Architecture MVC
+
+Le backend suit le pattern **MVC (Model-View-Controller)** adapté pour une API REST :
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        REQUÊTE HTTP                              │
+└─────────────────────────────────────────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                      ROUTES (routes/)                            │
+│              Définit les endpoints et middlewares                │
+│         Ex: router.post('/artworks', auth, artworkController.create)│
+└─────────────────────────────────────────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                   MIDDLEWARES (middlewares/)                     │
+│           Auth, Validation, Rate Limiting, Upload                │
+└─────────────────────────────────────────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                  CONTROLLER (controllers/)                       │
+│              Logique métier, orchestration                       │
+│         • Reçoit req, res                                        │
+│         • Appelle les Models                                     │
+│         • Retourne la réponse JSON                               │
+└─────────────────────────────────────────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                     MODEL (models/)                              │
+│              Accès BDD via Sequelize/Prisma                      │
+│         • Définition du schéma                                   │
+│         • Requêtes CRUD                                          │
+│         • Validations données                                    │
+└─────────────────────────────────────────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                      RÉPONSE JSON                                │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Rôle de chaque couche** :
+
+| Couche | Responsabilité | Exemple |
+|--------|----------------|---------|
+| **Routes** | Mapping URL → Controller | `POST /api/v1/artworks` → `artworkController.create` |
+| **Middlewares** | Traitements transverses | Auth JWT, validation body, upload fichiers |
+| **Controllers** | Logique métier | Créer artwork, vérifier droits, appeler Model |
+| **Models** | Accès données | `Artwork.create()`, `Artwork.findAll()` |
+| **Views** | Templates (emails) | Email de confirmation commande |
+
+**Exemple de flux** - Création d'un artwork :
+
+```javascript
+// routes/artwork.routes.js
+router.post('/', 
+  authMiddleware,           // 1. Vérifie JWT
+  upload.single('image'),   // 2. Upload image
+  validate(artworkSchema),  // 3. Valide les données
+  artworkController.create  // 4. Appelle le controller
+);
+
+// controllers/artworkController.js
+exports.create = async (req, res, next) => {
+  try {
+    const { title, description, price, categoryId } = req.body;
+    const artistId = req.user.artistId;
+    
+    // Appel au Model
+    const artwork = await Artwork.create({
+      title, description, price, categoryId, artistId,
+      imageUrl: req.file.location
+    });
+    
+    res.status(201).json({ success: true, data: artwork });
+  } catch (error) {
+    next(error); // Passe au errorHandler
+  }
+};
+
+// models/Artwork.js (Sequelize)
+module.exports = (sequelize, DataTypes) => {
+  const Artwork = sequelize.define('Artwork', {
+    title: { type: DataTypes.STRING, allowNull: false },
+    price: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
+    // ...
+  });
+  
+  Artwork.associate = (models) => {
+    Artwork.belongsTo(models.Artist);
+    Artwork.belongsTo(models.Category);
+  };
+  
+  return Artwork;
+};
+```
+
+### 2.5 API REST - Conventions
 
 **Base URL** : `https://api.geishagarden.io/v1`
 
@@ -2088,4 +2229,5 @@ GET    /api/v1/admin/stats
 
 **Document rédigé le 18 Décembre 2025**  
 **Version 1.0**
+
 
