@@ -1,7 +1,7 @@
-# 🗂️ ROADMAP GEISHA GARDEN - Export Trello
+# 🗂️ ROADMAP MAKE IT ART - Export Trello
 
 > **Instructions d'import Trello** :
-> 1. Créer un board "Geisha Garden MVP"
+> 1. Créer un board "Make It Art MVP"
 > 2. Créer les listes : `Backlog`, `Sprint X - To Do`, `In Progress`, `Review`, `Done`
 > 3. Copier chaque tâche ci-dessous comme une carte
 > 4. Ajouter les labels selon la légende
@@ -415,7 +415,7 @@ Créer ces milestones/labels de sprint :
 
 ## ✅ CHECKLIST IMPORT TRELLO
 
-- [ ] Créer board "Geisha Garden MVP"
+- [ ] Créer board "Make It Art MVP"
 - [ ] Créer labels (voir légende)
 - [ ] Créer listes par sprint
 - [ ] Importer tâches Phase 1 dans Sprint 1-2

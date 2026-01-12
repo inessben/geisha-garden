@@ -1,5 +1,5 @@
 # 📋 CAHIER DES CHARGES TECHNIQUE
-## Geisha Garden - Marketplace d'Art Digital
+## Make It Art - Marketplace d'Art Digital
 
 **Version** : 1.0  
 **Date** : 18 Décembre 2025  
@@ -27,7 +27,7 @@
 ## 1. PRÉSENTATION DU PROJET
 
 ### 1.1 Description
-**Geisha Garden** est une marketplace d'art digital immersive avec une esthétique cyberpunk. La plateforme permet aux artistes de vendre leurs œuvres numériques et aux collectionneurs de les acheter, avec une future intégration crypto/NFT.
+**Make It Art** est une marketplace d'art digital immersive avec une esthétique cyberpunk. La plateforme permet aux artistes de vendre leurs œuvres numériques et aux collectionneurs de les acheter, avec une future intégration crypto/NFT.
 
 ### 1.2 Objectifs Fonctionnels
 - Galerie d'œuvres d'art avec navigation 3D immersive
@@ -95,7 +95,7 @@
 ### 2.3 Structure des Repositories
 
 ```
-geisha-garden/
+make-it-art/
 ├── frontend/                    # Repository Nuxt.js (existant)
 │   ├── assets/
 │   ├── components/
@@ -286,7 +286,7 @@ module.exports = (sequelize, DataTypes) => {
 
 ### 2.5 API REST - Conventions
 
-**Base URL** : `https://api.geishagarden.io/v1`
+**Base URL** : `https://api.makeitart.io/v1`
 
 **Format des réponses** :
 ```json
@@ -358,7 +358,7 @@ module.exports = (sequelize, DataTypes) => {
 
 ```sql
 -- =============================================
--- SCHÉMA BASE DE DONNÉES GEISHA GARDEN
+-- SCHÉMA BASE DE DONNÉES MAKE IT ART
 -- PostgreSQL 16.x
 -- =============================================
 
@@ -571,7 +571,7 @@ CREATE INDEX idx_follows_artist ON follows(artist_id);
 -- =============================================
 CREATE TABLE orders (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    order_number VARCHAR(20) UNIQUE NOT NULL,  -- GG-2025-000001
+    order_number VARCHAR(20) UNIQUE NOT NULL,  -- MIA-2025-000001
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
     
     -- Montants
@@ -767,9 +767,9 @@ BEGIN
     SELECT COALESCE(MAX(CAST(SUBSTRING(order_number FROM 9) AS INTEGER)), 0) + 1
     INTO seq_num
     FROM orders
-    WHERE order_number LIKE 'GG-' || year_part || '-%';
+    WHERE order_number LIKE 'MIA-' || year_part || '-%';
     
-    NEW.order_number := 'GG-' || year_part || '-' || LPAD(seq_num::TEXT, 6, '0');
+    NEW.order_number := 'MIA-' || year_part || '-' || LPAD(seq_num::TEXT, 6, '0');
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -978,7 +978,7 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: ["'self'"],
       imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "https://api.geishagarden.io"],
+      connectSrc: ["'self'", "https://api.makeitart.io"],
     }
   },
   hsts: { maxAge: 31536000, includeSubDomains: true }
@@ -1037,18 +1037,18 @@ services:
   # Base de données PostgreSQL
   postgres:
     image: postgres:16-alpine
-    container_name: geisha_postgres
+    container_name: makeitart_postgres
     environment:
-      POSTGRES_USER: geisha_dev
+      POSTGRES_USER: makeitart_dev
       POSTGRES_PASSWORD: dev_password_123
-      POSTGRES_DB: geisha_garden_dev
+      POSTGRES_DB: make_it_art_dev
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./backend/migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U geisha_dev"]
+      test: ["CMD-SHELL", "pg_isready -U makeitart_dev"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -1056,7 +1056,7 @@ services:
   # Cache Redis
   redis:
     image: redis:7-alpine
-    container_name: geisha_redis
+    container_name: makeitart_redis
     ports:
       - "6379:6379"
     command: redis-server --appendonly yes
@@ -1068,10 +1068,10 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: geisha_backend
+    container_name: makeitart_backend
     environment:
       NODE_ENV: development
-      DATABASE_URL: postgresql://geisha_dev:dev_password_123@postgres:5432/geisha_garden_dev
+      DATABASE_URL: postgresql://makeitart_dev:dev_password_123@postgres:5432/make_it_art_dev
       REDIS_URL: redis://redis:6379
       JWT_SECRET: dev-jwt-secret-change-in-prod
       JWT_REFRESH_SECRET: dev-refresh-secret-change-in-prod
@@ -1092,7 +1092,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: geisha_frontend
+    container_name: makeitart_frontend
     environment:
       NUXT_PUBLIC_API_URL: http://localhost:4000/api/v1
     ports:
@@ -1106,7 +1106,7 @@ services:
   # Adminer (interface BDD légère)
   adminer:
     image: adminer:latest
-    container_name: geisha_adminer
+    container_name: makeitart_adminer
     ports:
       - "8080:8080"
     depends_on:
@@ -1130,7 +1130,7 @@ docker-compose logs -f backend
 docker-compose down -v && docker-compose up -d
 
 # Accéder au shell PostgreSQL
-docker exec -it geisha_postgres psql -U geisha_dev -d geisha_garden_dev
+docker exec -it makeitart_postgres psql -U makeitart_dev -d make_it_art_dev
 ```
 
 **Variables d'environnement (.env.development)** :
@@ -1139,7 +1139,7 @@ docker exec -it geisha_postgres psql -U geisha_dev -d geisha_garden_dev
 # Backend
 NODE_ENV=development
 PORT=4000
-DATABASE_URL=postgresql://geisha_dev:dev_password_123@localhost:5432/geisha_garden_dev
+DATABASE_URL=postgresql://makeitart_dev:dev_password_123@localhost:5432/make_it_art_dev
 REDIS_URL=redis://localhost:6379
 
 # JWT
@@ -1162,7 +1162,7 @@ STORAGE_ENDPOINT=localhost
 STORAGE_PORT=9000
 STORAGE_ACCESS_KEY=minioadmin
 STORAGE_SECRET_KEY=minioadmin
-STORAGE_BUCKET=geisha-artworks
+STORAGE_BUCKET=makeitart-artworks
 ```
 
 ### 5.2 Environnement de Production
@@ -1175,7 +1175,7 @@ STORAGE_BUCKET=geisha-artworks
 # Backend
 NODE_ENV=production
 PORT=4000
-DATABASE_URL=postgresql://geisha_prod:SECURE_PASSWORD@localhost:5432/geisha_garden_prod
+DATABASE_URL=postgresql://makeitart_prod:SECURE_PASSWORD@localhost:5432/make_it_art_prod
 REDIS_URL=redis://:REDIS_PASSWORD@localhost:6379
 
 # JWT (secrets générés avec: openssl rand -base64 64)
@@ -1191,13 +1191,13 @@ GITHUB_CLIENT_ID=prod-github-client-id
 GITHUB_CLIENT_SECRET=prod-github-client-secret
 
 # URLs
-FRONTEND_URL=https://geishagarden.io
-API_URL=https://api.geishagarden.io
+FRONTEND_URL=https://makeitart.io
+API_URL=https://api.makeitart.io
 
 # File Storage (S3)
 STORAGE_PROVIDER=s3
 STORAGE_REGION=eu-west-3
-STORAGE_BUCKET=geisha-artworks-prod
+STORAGE_BUCKET=makeitart-artworks-prod
 AWS_ACCESS_KEY_ID=<aws-access-key>
 AWS_SECRET_ACCESS_KEY=<aws-secret-key>
 
@@ -1248,8 +1248,8 @@ SENTRY_DSN=https://xxx@sentry.io/xxx
 │  ┌────────────────────────────┴───────────────────────────────┐ │
 │  │                    NGINX (Host)                            │ │
 │  │              SSL via Let's Encrypt                         │ │
-│  │         geishagarden.io → :3000 (frontend)                 │ │
-│  │     api.geishagarden.io → :4000 (backend)                  │ │
+│  │         makeitart.io → :3000 (frontend)                    │ │
+│  │     api.makeitart.io → :4000 (backend)                     │ │
 │  └────────────────────────────────────────────────────────────┘ │
 │                               │                                  │
 │  ┌────────────────────────────┴───────────────────────────────┐ │
@@ -1358,9 +1358,9 @@ systemctl enable postgresql
 
 # Configuration PostgreSQL
 sudo -u postgres psql << EOF
-CREATE USER geisha_prod WITH PASSWORD 'CHANGE_THIS_SECURE_PASSWORD';
-CREATE DATABASE geisha_garden_prod OWNER geisha_prod;
-GRANT ALL PRIVILEGES ON DATABASE geisha_garden_prod TO geisha_prod;
+CREATE USER makeitart_prod WITH PASSWORD 'CHANGE_THIS_SECURE_PASSWORD';
+CREATE DATABASE make_it_art_prod OWNER makeitart_prod;
+GRANT ALL PRIVILEGES ON DATABASE make_it_art_prod TO makeitart_prod;
 EOF
 
 # Limiter PostgreSQL à localhost uniquement
@@ -1371,8 +1371,8 @@ apt install -y nginx certbot python3-certbot-nginx
 systemctl enable nginx
 
 echo "=== 10. Configuration Logrotate ==="
-cat > /etc/logrotate.d/geisha-garden << EOF
-/var/log/geisha-garden/*.log {
+cat > /etc/logrotate.d/make-it-art << EOF
+/var/log/make-it-art/*.log {
     daily
     missingok
     rotate 14
@@ -1394,22 +1394,22 @@ echo "3. Testez la connexion SSH avant de fermer cette session"
 ### 6.4 Configuration Nginx Production
 
 ```nginx
-# /etc/nginx/sites-available/geishagarden.io
+# /etc/nginx/sites-available/makeitart.io
 
 # Redirect HTTP → HTTPS
 server {
     listen 80;
-    server_name geishagarden.io www.geishagarden.io api.geishagarden.io;
+    server_name makeitart.io www.makeitart.io api.makeitart.io;
     return 301 https://$host$request_uri;
 }
 
 # Frontend
 server {
     listen 443 ssl http2;
-    server_name geishagarden.io www.geishagarden.io;
+    server_name makeitart.io www.makeitart.io;
 
-    ssl_certificate /etc/letsencrypt/live/geishagarden.io/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/geishagarden.io/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/makeitart.io/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/makeitart.io/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256;
     ssl_prefer_server_ciphers off;
@@ -1444,10 +1444,10 @@ server {
 # API Backend
 server {
     listen 443 ssl http2;
-    server_name api.geishagarden.io;
+    server_name api.makeitart.io;
 
-    ssl_certificate /etc/letsencrypt/live/geishagarden.io/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/geishagarden.io/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/makeitart.io/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/makeitart.io/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
 
     # Security headers
@@ -1468,7 +1468,7 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
 
         # CORS headers (ajuster selon besoins)
-        add_header Access-Control-Allow-Origin "https://geishagarden.io" always;
+        add_header Access-Control-Allow-Origin "https://makeitart.io" always;
         add_header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS" always;
         add_header Access-Control-Allow-Headers "Authorization, Content-Type" always;
         
@@ -1530,7 +1530,7 @@ jobs:
         env:
           POSTGRES_USER: test_user
           POSTGRES_PASSWORD: test_password
-          POSTGRES_DB: geisha_test
+          POSTGRES_DB: makeitart_test
         ports:
           - 5432:5432
         options: >-
@@ -1571,14 +1571,14 @@ jobs:
       - name: Run Migrations
         working-directory: ./backend
         env:
-          DATABASE_URL: postgresql://test_user:test_password@localhost:5432/geisha_test
+          DATABASE_URL: postgresql://test_user:test_password@localhost:5432/makeitart_test
         run: npm run db:migrate
 
       - name: Run Unit Tests
         working-directory: ./backend
         env:
           NODE_ENV: test
-          DATABASE_URL: postgresql://test_user:test_password@localhost:5432/geisha_test
+          DATABASE_URL: postgresql://test_user:test_password@localhost:5432/makeitart_test
           REDIS_URL: redis://localhost:6379
           JWT_SECRET: test-jwt-secret-for-ci-pipeline
           JWT_REFRESH_SECRET: test-refresh-secret-for-ci
@@ -1588,7 +1588,7 @@ jobs:
         working-directory: ./backend
         env:
           NODE_ENV: test
-          DATABASE_URL: postgresql://test_user:test_password@localhost:5432/geisha_test
+          DATABASE_URL: postgresql://test_user:test_password@localhost:5432/makeitart_test
           REDIS_URL: redis://localhost:6379
           JWT_SECRET: test-jwt-secret-for-ci-pipeline
           JWT_REFRESH_SECRET: test-refresh-secret-for-ci
@@ -1725,14 +1725,14 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            cd /opt/geisha-garden
+            cd /opt/make-it-art
             
             # Pull latest images
             docker pull ghcr.io/${{ github.repository }}/backend:latest
             docker pull ghcr.io/${{ github.repository }}/frontend:latest
             
             # Backup current state
-            docker-compose -f docker-compose.prod.yml exec -T postgres pg_dump -U geisha_prod geisha_garden_prod > /backups/pre-deploy-$(date +%Y%m%d_%H%M%S).sql
+            docker-compose -f docker-compose.prod.yml exec -T postgres pg_dump -U makeitart_prod make_it_art_prod > /backups/pre-deploy-$(date +%Y%m%d_%H%M%S).sql
             
             # Deploy with zero-downtime
             docker-compose -f docker-compose.prod.yml up -d --no-deps --build backend
@@ -1757,7 +1757,7 @@ jobs:
         with:
           payload: |
             {
-              "text": "✅ Geisha Garden déployé en production!\nCommit: ${{ github.sha }}\nPar: ${{ github.actor }}"
+              "text": "✅ Make It Art déployé en production!\nCommit: ${{ github.sha }}\nPar: ${{ github.actor }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
@@ -1768,7 +1768,7 @@ jobs:
         with:
           payload: |
             {
-              "text": "❌ Échec du déploiement Geisha Garden!\nCommit: ${{ github.sha }}\nVoir: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+              "text": "❌ Échec du déploiement Make It Art!\nCommit: ${{ github.sha }}\nVoir: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
@@ -1854,7 +1854,7 @@ jobs:
 
 ## 1. Qui sommes-nous ?
 
-Geisha Garden est édité par [RAISON SOCIALE], [ADRESSE], [SIRET].
+Make It Art est édité par [RAISON SOCIALE], [ADRESSE], [SIRET].
 
 **Délégué à la protection des données (DPO)** : [EMAIL]
 
@@ -2211,7 +2211,7 @@ GET    /api/v1/admin/stats
 - [Docker](https://docs.docker.com/)
 
 **Support équipe** :
-- Channel Discord : #geisha-garden-dev
+- Channel Discord : #make-it-art-dev
 - Réunions : [LIEN CALENDRIER]
 - Documentation interne : [LIEN NOTION]
 

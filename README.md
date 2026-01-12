@@ -1,4 +1,4 @@
-# 🌸 Geisha Garden
+# 🎨 Make It Art
 
 > **Marketplace d'art digital immersive — Univers cyberpunk 3D**
 
@@ -34,8 +34,8 @@ Plateforme de vente d'art digital avec une expérience 3D immersive. Les artiste
 
 ```bash
 # Cloner le projet
-git clone https://github.com/inessben/geisha-garden-mvp.git
-cd geisha-garden-mvp
+git clone https://github.com/inessben/make-it-art.git
+cd make-it-art
 
 # Lancer avec Docker (recommandé)
 docker-compose up -d
@@ -51,7 +51,7 @@ npm install && npm run dev
 ## 📁 Structure
 
 ```
-geisha-garden/
+make-it-art/
 ├── frontend/              # Nuxt.js (Vue 3 + Three.js)
 ├── backend/               # Express.js - Architecture MVC
 │   ├── src/

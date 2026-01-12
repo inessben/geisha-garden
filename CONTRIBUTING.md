@@ -1,6 +1,6 @@
-# 🤝 Guide de Contribution - Geisha Garden
+# 🤝 Guide de Contribution - Make It Art
 
-Merci de votre intérêt pour contribuer à **Geisha Garden** ! Ce guide vous aidera à configurer votre environnement de développement.
+Merci de votre intérêt pour contribuer à **Make It Art** ! Ce guide vous aidera à configurer votre environnement de développement.
 
 ---
 
@@ -58,11 +58,11 @@ anchor --version
 
 ```bash
 # Fork le projet sur GitHub puis clone ton fork
-git clone https://github.com/VOTRE-USERNAME/geisha-garden.git
-cd geisha-garden
+git clone https://github.com/VOTRE-USERNAME/make-it-art.git
+cd make-it-art
 
 # Ajouter le repository original comme remote
-git remote add upstream https://github.com/inessben/geisha-garden.git
+git remote add upstream https://github.com/inessben/make-it-art.git
 ```
 
 ### 2. Installer les dépendances Backend
@@ -103,9 +103,9 @@ npm install
 cd ../contracts/solana
 
 # Initialiser un projet Anchor
-anchor init geisha-nft
+anchor init makeitart-nft
 
-cd geisha-nft
+cd makeitart-nft
 anchor build
 ```
 
@@ -143,7 +143,7 @@ cp .env.example .env
 ```env
 NODE_ENV=development
 PORT=4000
-MONGO_URI=mongodb://localhost:27017/geisha
+MONGO_URI=mongodb://localhost:27017/makeitart
 ```
 
 #### JWT
@@ -183,7 +183,7 @@ GITHUB_CALLBACK_URL=http://localhost:4000/auth/github/callback
 
 #### 2FA TOTP
 ```env
-TOTP_ISSUER=Geisha Garden
+TOTP_ISSUER=Make It Art
 TOTP_WINDOW=1
 TOTP_STEP=30
 ```
@@ -193,7 +193,7 @@ TOTP_STEP=30
 AWS_ACCESS_KEY_ID=your_key
 AWS_SECRET_ACCESS_KEY=your_secret
 AWS_REGION=eu-west-3
-S3_BUCKET=geisha-artworks
+S3_BUCKET=makeitart-artworks
 ```
 
 #### Stripe (Optionnel pour dev)
@@ -293,7 +293,7 @@ mongod
 
 #### Solana
 ```bash
-cd contracts/solana/geisha-nft
+cd contracts/solana/makeitart-nft
 
 # Compiler
 anchor build
@@ -348,7 +348,7 @@ npm run test
 
 #### Solana
 ```bash
-cd contracts/solana/geisha-nft
+cd contracts/solana/makeitart-nft
 anchor test
 ```
 
@@ -501,14 +501,14 @@ git push origin feature/nom-de-la-feature
 
 ## 💬 Support
 
-- 🐛 **Issues** : [GitHub Issues](https://github.com/inessben/geisha-garden/issues)
-- 💬 **Discussions** : [GitHub Discussions](https://github.com/inessben/geisha-garden/discussions)
+- 🐛 **Issues** : [GitHub Issues](https://github.com/inessben/make-it-art/issues)
+- 💬 **Discussions** : [GitHub Discussions](https://github.com/inessben/make-it-art/discussions)
 - 📧 **Email** : votre-email@example.com
 
 ---
 
 ## 🙏 Merci !
 
-Merci de contribuer à **Geisha Garden** ! Chaque contribution compte, qu'elle soit petite ou grande.
+Merci de contribuer à **Make It Art** ! Chaque contribution compte, qu'elle soit petite ou grande.
 
 **🌸 Happy Coding! 💜**
