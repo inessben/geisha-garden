@@ -1,4 +1,4 @@
-# 🎨 Make It Art
+# Make It Art
 
 > **Marketplace d'art digital immersive — Univers cyberpunk 3D**
 
@@ -10,100 +10,79 @@
 
 ---
 
-## 🎯 Le Projet
+## Le Projet
 
-Plateforme de vente d'art digital avec une expérience 3D immersive. Les artistes exposent et vendent leurs œuvres, les collectionneurs découvrent et achètent dans un environnement cyberpunk unique.
+Plateforme de vente d'art digital avec une expérience 3D immersive. Les artistes exposent et vendent leurs oeuvres, les collectionneurs découvrent et achètent dans un environnement cyberpunk unique.
 
 **Équipe** : Ethan, Iness, Théa, Mimi
 
 ---
 
-## 🛠️ Stack Technique
+## Stack Technique
 
 | Couche | Technologie |
 |--------|-------------|
 | **Frontend** | Nuxt 4, Vue 3, Three.js, TypeScript |
-| **Backend** | Node.js 20, Express.js |
+| **Backend** | Node.js 20, Express.js, Prisma |
 | **Base de données** | PostgreSQL 16, Redis |
 | **Infra** | Docker, Nginx, VPS Linux |
 | **CI/CD** | GitHub Actions |
 
 ---
 
-## 📦 Installation
+## Installation
 
-```bash
-# Cloner le projet
-git clone https://github.com/inessben/make-it-art.git
-cd make-it-art
+1. Cloner le projet depuis GitHub
+2. Lancer avec Docker Compose (recommandé) ou manuellement avec npm install && npm run dev
 
-# Lancer avec Docker (recommandé)
-docker-compose up -d
-
-# OU manuellement (frontend seul)
-npm install && npm run dev
-```
-
-**Accès** : http://localhost:3000 (frontend) • http://localhost:4000 (API)
+**Accès** : http://localhost:3000 (frontend) | http://localhost:4000 (API)
 
 ---
 
-## 📁 Structure
+## Structure
 
-```
-make-it-art/
-├── frontend/              # Nuxt.js (Vue 3 + Three.js)
-├── backend/               # Express.js - Architecture MVC
-│   ├── src/
-│   │   ├── models/        # M - Modèles Sequelize (BDD)
-│   │   ├── views/         # V - Templates emails
-│   │   ├── controllers/   # C - Logique métier
-│   │   ├── routes/        # Endpoints API
-│   │   └── middlewares/   # Auth, validation, errors
-│   └── ...
-├── infrastructure/        # Docker, Nginx, scripts
-└── .github/workflows/     # CI/CD
-```
+| Dossier | Description |
+|---------|-------------|
+| **frontend/** | Application Nuxt.js (Vue 3 + Three.js) |
+| **backend/** | API Express.js avec Prisma |
+| **infrastructure/** | Docker, Nginx, scripts de déploiement |
+| **.github/workflows/** | Pipelines CI/CD |
 
 ---
 
-## 📅 Roadmap
+## Roadmap
 
-| Phase | Contenu | Durée |
-|-------|---------|-------|
-| **1. Fondations** | Infra Docker, BDD PostgreSQL, API Express | 3-4 sem |
-| **2. Auth** | OAuth2 (Google/GitHub), JWT, 2FA TOTP | 2-3 sem |
-| **3. Core** | CRUD Artworks, Profils artistes, Favoris | 4-5 sem |
-| **4. E-Commerce** | Panier, Stripe, Téléchargements | 3-4 sem |
-| **5. Finalisation** | RGPD, Tests, Monitoring, Go-live | 2-3 sem |
-
-**Estimation totale** : ~3.5 mois (4 devs)
+| Phase | Contenu |
+|-------|---------|
+| **1. Fondations** | Infra Docker, BDD PostgreSQL, API Express |
+| **2. Auth** | OAuth2 (Google/GitHub), JWT, 2FA TOTP |
+| **3. Core** | CRUD Artworks, Profils artistes, Favoris |
+| **4. E-Commerce** | Panier, Stripe, Téléchargements |
+| **5. Finalisation** | RGPD, Tests, Monitoring, Go-live |
 
 ---
 
-## 📚 Documentation
+## Documentation
 
 | Document | Description |
 |----------|-------------|
 | [CAHIER_DES_CHARGES.md](./CAHIER_DES_CHARGES.md) | Architecture, BDD, Auth, Infra, RGPD — **Document complet** |
-| [ROADMAP_TRELLO.md](./ROADMAP_TRELLO.md) | 166 tâches détaillées avec assignations |
+| [ROADMAP_TRELLO.md](./ROADMAP_TRELLO.md) | Tâches détaillées avec assignations |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | Guidelines de contribution |
 
 ---
 
-## 🚀 Commandes
+## Commandes
 
-```bash
-npm run dev       # Dev frontend (port 3000)
-npm run build     # Build production
-npm run lint      # Linter
-```
+- **Dev frontend** : npm run dev (port 3000)
+- **Build production** : npm run build
+- **Linter** : npm run lint
 
 ---
 
-## 👥 Équipe & Workflow
+## Équipe & Workflow
 
-- **Branches** : `main` (prod) ← `develop` ← `feature/*`
+- **Branches** : `main` (prod) <- `develop` <- `feature/*`
 - **Commits** : Conventional Commits (`feat:`, `fix:`, `docs:`)
 - **Reviews** : PR obligatoire, 1 approval minimum
 - **Sprints** : 2 semaines
@@ -112,8 +91,8 @@ npm run lint      # Linter
 
 <div align="center">
 
-**🌸 Where art meets the future 💜**
+**Where art meets the future**
 
-[Cahier des charges](./CAHIER_DES_CHARGES.md) • [Roadmap](./ROADMAP_TRELLO.md) • [Discord](https://discord.gg/37T53Q6FSU)
+[Cahier des charges](./CAHIER_DES_CHARGES.md) | [Roadmap](./ROADMAP_TRELLO.md) | [Discord](https://discord.gg/37T53Q6FSU)
 
 </div>
