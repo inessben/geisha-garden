@@ -276,7 +276,18 @@ L'architecture suit un modèle **client-serveur classique** avec séparation fro
 
 **Schéma géré via Prisma** : Le fichier `prisma/schema.prisma` définit l'ensemble du modèle de données avec les relations, contraintes et index.
 
-### 4.3 Outils de Gestion
+### 4.3 Modélisation (MLD)
+
+**Outils recommandés pour créer le MLD (Modèle Logique de Données)** :
+
+| Outil | Usage |
+|-------|-------|
+| **Mermaid.js** | Diagrammes ERD en markdown, intégré à GitHub |
+| **Azimutt** | Visualisation et exploration de schémas BDD |
+
+Le MLD doit être créé avant l'implémentation pour visualiser les relations entre tables.
+
+### 4.4 Outils de Gestion
 
 | Outil | Usage |
 |-------|-------|
@@ -615,49 +626,49 @@ Les variables essentielles à configurer dans `.env.production` :
 
 ## 10. INFRASTRUCTURE & DÉPLOIEMENT
 
-### 10.1 Choix du VPS
+### 10.1 Choix de l'hébergement : Hetzner Cloud
 
-**Fournisseurs recommandés** :
+**Solution retenue** : **Hetzner Cloud** (pas de serveur physique, containers managés)
 
-| Fournisseur | Offre recommandée | Prix/mois | Avantages |
-|-------------|-------------------|-----------|-----------|
-| **Scaleway** | DEV1-M (3 vCPU, 4GB RAM, 40GB SSD) | ~12€ | Datacenter Paris, bonne doc |
-| **OVH** | VPS Comfort (2 vCPU, 4GB RAM, 80GB SSD) | ~12€ | Français, support FR |
-| **DigitalOcean** | Droplet 4GB (2 vCPU, 4GB RAM, 80GB SSD) | ~24$ | Excellent UX, communauté |
-| **Hetzner** | CX21 (2 vCPU, 4GB RAM, 40GB SSD) | ~6€ | Très bon rapport qualité/prix |
+| Élément | Configuration |
+|---------|---------------|
+| **Type** | Cloud containers |
+| **Capacité** | 33 containers |
+| **Prix** | ~32€/mois |
+| **Avantages** | Scalabilité, pas de gestion serveur physique, excellent rapport qualité/prix |
 
-**Recommandation** : **Scaleway DEV1-M** ou **Hetzner CX21** pour le rapport qualité/prix.
-
-**Configuration minimale requise** :
-- 2 vCPU
-- 4 GB RAM
-- 40 GB SSD
-- OS : Ubuntu 22.04 LTS
+**Pourquoi Hetzner Cloud ?**
+- Infrastructure containerisée (pas de VPS physique à gérer)
+- Scaling horizontal facile
+- Datacenter européen (RGPD compliant)
+- Prix très compétitif
+- Interface simple et API complète
 
 ### 10.2 Architecture Production
 
-**Structure du VPS Linux (Ubuntu 22.04)** :
+**Structure des containers Hetzner Cloud** :
 
-1. **UFW Firewall** : Ports 22 (SSH), 80, 443 uniquement
-2. **Nginx (Host)** : SSL via Let's Encrypt, reverse proxy
-   - makeitart.io -> :3000 (frontend)
-   - api.makeitart.io -> :4000 (backend)
-3. **Docker Engine** : Frontend, Backend, Redis en containers
-4. **PostgreSQL (Host)** : Port 5432, non exposé externe
+| Container | Service | Port |
+|-----------|---------|------|
+| **nginx** | Reverse proxy + SSL | 80, 443 |
+| **frontend** | Nuxt.js | 3000 |
+| **backend** | Express.js | 4000 |
+| **postgres** | PostgreSQL 16 | 5432 |
+| **redis** | Cache/Sessions | 6379 |
 
-### 10.3 Sécurisation du VPS
+**Routing** :
+- makeitart.io -> frontend:3000
+- api.makeitart.io -> backend:4000
 
-**Étapes de sécurisation** :
-1. Mise à jour du système
-2. Création utilisateur deploy (non-root)
-3. Configuration SSH (clé publique uniquement, pas de root login)
-4. Configuration Firewall (UFW)
-5. Configuration Fail2Ban
-6. Mises à jour automatiques
-7. Installation Docker
-8. Installation PostgreSQL
-9. Installation Nginx
-10. Configuration Logrotate
+### 10.3 Sécurisation
+
+**Configuration sécurité** :
+- SSL/TLS via Let's Encrypt (auto-renew)
+- Réseau privé entre containers
+- Variables d'environnement sécurisées
+- Secrets managés
+- Logs centralisés
+- Backups automatiques
 
 ### 10.4 Configuration Nginx Production
 
@@ -796,14 +807,17 @@ La page doit contenir :
 
 ## 13. ORGANISATION DE L'ÉQUIPE
 
-### 13.1 Répartition des Rôles
+### 13.1 Philosophie de l'équipe
 
-| Membre | Rôle | Responsabilités | Compétences clés |
-|--------|------|-----------------|------------------|
-| **Ethan** | Lead Dev / DevOps | Architecture, infra, CI/CD, code review | Docker, Linux, PostgreSQL, sécurité |
-| **Iness** | Dev Backend | API Express, auth, BDD, performances | Node.js, SQL, OAuth, tests |
-| **Théa** | Dev Frontend / 3D | Nuxt.js, composants, Three.js, UX | Vue.js, TypeScript, WebGL |
-| **Mimi** | Dev Fullstack | Features transverses, intégration, tests | Node.js, Vue.js, Docker |
+L'équipe fonctionne en mode **polyvalent** : chaque membre contribue à toutes les parties du projet (frontend, backend, infrastructure, 3D). Il n'y a pas de rôles fixes ou de spécialisations imposées.
+
+**Membres** : Ethan, Iness, Théa, Mimi
+
+**Principes** :
+- Chacun peut travailler sur n'importe quelle partie du code
+- Les tâches sont assignées selon la disponibilité et l'intérêt
+- Le partage de connaissances est encouragé via le pair programming et les code reviews croisées
+- Tout le monde participe aux décisions d'architecture
 
 ### 13.2 Workflow Git
 
@@ -1057,12 +1071,12 @@ La page doit contenir :
 
 ## VALIDATION DU CAHIER DES CHARGES
 
-| Membre | Rôle | Date | Signature |
-|--------|------|------|-----------|
-| Ethan | Lead Dev / DevOps | | |
-| Iness | Dev Backend | | |
-| Théa | Dev Frontend / 3D | | |
-| Mimi | Dev Fullstack | | |
+| Membre | Date | Signature |
+|--------|------|-----------|
+| Ethan | | |
+| Iness | | |
+| Théa | | |
+| Mimi | | |
 
 ---
 

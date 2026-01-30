@@ -14,7 +14,7 @@
 
 Plateforme de vente d'art digital avec une expérience 3D immersive. Les artistes exposent et vendent leurs oeuvres, les collectionneurs découvrent et achètent dans un environnement cyberpunk unique.
 
-**Équipe** : Ethan, Iness, Théa, Mimi
+**Équipe** : Ethan, Iness, Théa, Mimi (équipe polyvalente, chacun contribue à toutes les parties du projet)
 
 ---
 
